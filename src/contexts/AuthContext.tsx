@@ -17,29 +17,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check active sessions and sets the user
-    const getSession = async () => {
-      setLoading(true);
-      
-      const user = await getCurrentUser();
-      setUser(user);
-      
-      setLoading(false);
-    };
-
-    getSession();
-
-    // Listen for changes on auth state (logged in, signed out, etc.)
+    // Configurar persistência de sessão
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event) => {
+      async (event, session) => {
         if (event === 'SIGNED_IN') {
-          const user = await getCurrentUser();
-          setUser(user);
+          const userData = await getCurrentUser();
+          setUser(userData);
+          setLoading(false);
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
+          setLoading(false);
         }
       }
     );
+
+    // Verificar sessão inicial
+    const checkInitialSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const userData = await getCurrentUser();
+        setUser(userData);
+      }
+      setLoading(false);
+    };
+
+    checkInitialSession();
 
     return () => {
       subscription.unsubscribe();
@@ -53,8 +55,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (!error && data) {
-      const user = await getCurrentUser();
-      setUser(user);
+      const userData = await getCurrentUser();
+      setUser(userData);
     }
 
     return { error };

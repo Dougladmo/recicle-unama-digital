@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -91,30 +90,51 @@ export default function Cadastro() {
     try {
       setUploadingFoto(true);
       
-      // Create file preview
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "Erro",
+          description: "O arquivo de imagem não pode ser maior que 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "Erro",
+          description: "Apenas imagens JPEG, PNG, GIF e WebP são permitidas.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
         setFotoPreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
 
-      // Upload to Supabase Storage
       const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `fotos/${fileName}`;
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `user-photos/${fileName}`;
 
-      const { data, error } = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('user-photos')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
-      if (error) throw error;
+      if (uploadError) {
+        throw uploadError;
+      }
 
-      // Get public URL
-      const { data: publicURL } = supabase.storage
+      const { data: urlData } = supabase.storage
         .from('user-photos')
         .getPublicUrl(filePath);
 
-      form.setValue("foto_url", publicURL.publicUrl);
+      form.setValue("foto_url", urlData.publicUrl);
       
       toast({
         title: "Foto carregada",
@@ -124,7 +144,7 @@ export default function Cadastro() {
       console.error("Erro ao fazer upload da foto:", error);
       toast({
         title: "Erro",
-        description: "Não foi possível fazer upload da foto.",
+        description: error.message || "Não foi possível fazer upload da foto.",
         variant: "destructive",
       });
     } finally {
@@ -140,7 +160,7 @@ export default function Cadastro() {
         nome: values.nome,
         matricula: values.matricula,
         turma_id: values.turma_id,
-        foto_url: values.foto_url || "https://github.com/shadcn.png", // Default avatar
+        foto_url: values.foto_url || "https://github.com/shadcn.png",
       };
       
       const { data, error } = await signUp(values.email, values.password, userData);
@@ -307,7 +327,7 @@ export default function Cadastro() {
                       <div>
                         <Input
                           type="file"
-                          accept="image/*"
+                          accept="image/jpeg,image/png,image/gif,image/webp"
                           onChange={handleFotoUpload}
                           disabled={uploadingFoto}
                           className="hidden"
@@ -323,7 +343,7 @@ export default function Cadastro() {
                     </FormControl>
                   </div>
                   <FormDescription>
-                    Escolha uma foto de perfil (opcional)
+                    Escolha uma foto de perfil (até 5MB, JPG, PNG, GIF, WebP)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
