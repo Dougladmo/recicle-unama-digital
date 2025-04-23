@@ -48,6 +48,7 @@ export type Database = {
         Row: {
           aluno_id: string
           created_at: string | null
+          criada_em: string | null
           id: string
           quantidade_kg: number
           tipo_residuo: Database["public"]["Enums"]["tipo_residuo"]
@@ -55,6 +56,7 @@ export type Database = {
         Insert: {
           aluno_id: string
           created_at?: string | null
+          criada_em?: string | null
           id?: string
           quantidade_kg: number
           tipo_residuo: Database["public"]["Enums"]["tipo_residuo"]
@@ -62,6 +64,7 @@ export type Database = {
         Update: {
           aluno_id?: string
           created_at?: string | null
+          criada_em?: string | null
           id?: string
           quantidade_kg?: number
           tipo_residuo?: Database["public"]["Enums"]["tipo_residuo"]
