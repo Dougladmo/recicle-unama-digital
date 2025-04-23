@@ -1,4 +1,3 @@
-
 export type Unidade = {
   id: string;
   nome: string;
@@ -66,4 +65,11 @@ export type DashboardData = {
     turma: string;
     quantidade: number;
   }[];
+};
+
+export type DashboardFilters = {
+  curso: string | null; // 'ADS' | 'BCC' | null
+  semestre: number | null;
+  dataInicio: Date | null;
+  dataFim: Date | null;
 };

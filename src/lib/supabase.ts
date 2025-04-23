@@ -119,45 +119,112 @@ export async function getUnidades() {
 }
 
 // Dashboard API
-export async function getDashboardData(): Promise<{ data: DashboardData | null, error: any }> {
+export async function getDashboardData(filters?: {
+  curso?: string | null;
+  semestre?: number | null;
+  dataInicio?: Date | null;
+  dataFim?: Date | null;
+}): Promise<{ data: DashboardData | null, error: any }> {
+  // Build a common filters object for all queries
+  const queryFilters = {};
+  
+  if (filters?.curso) {
+    queryFilters['curso'] = filters.curso;
+  }
+  
+  if (filters?.semestre) {
+    queryFilters['semestre'] = filters.semestre;
+  }
+  
+  let dateFilter = {};
+  if (filters?.dataInicio) {
+    dateFilter['gte'] = filters.dataInicio.toISOString();
+  }
+  
+  if (filters?.dataFim) {
+    dateFilter['lte'] = filters.dataFim.toISOString();
+  }
+  
   // Get total kg recycled
-  const { data: totalData, error: totalError } = await supabase
-    .rpc('get_total_reciclado');
+  const totalQuery = supabase.rpc('get_total_reciclado');
+  if (filters?.curso || filters?.semestre) {
+    totalQuery.eq('filters', JSON.stringify(queryFilters));
+  }
+  if (filters?.dataInicio || filters?.dataFim) {
+    totalQuery.eq('date_filters', JSON.stringify(dateFilter));
+  }
+  const { data: totalData, error: totalError } = await totalQuery;
   
   if (totalError) return { data: null, error: totalError };
 
   // Get delivery count
-  const { data: countData, error: countError } = await supabase
-    .rpc('get_count_entregas');
+  const countQuery = supabase.rpc('get_count_entregas');
+  if (filters?.curso || filters?.semestre) {
+    countQuery.eq('filters', JSON.stringify(queryFilters));
+  }
+  if (filters?.dataInicio || filters?.dataFim) {
+    countQuery.eq('date_filters', JSON.stringify(dateFilter));
+  }
+  const { data: countData, error: countError } = await countQuery;
   
   if (countError) return { data: null, error: countError };
 
   // Get recycling by type
-  const { data: tipoData, error: tipoError } = await supabase
-    .rpc('get_reciclagem_por_tipo');
+  const tipoQuery = supabase.rpc('get_reciclagem_por_tipo');
+  if (filters?.curso || filters?.semestre) {
+    tipoQuery.eq('filters', JSON.stringify(queryFilters));
+  }
+  if (filters?.dataInicio || filters?.dataFim) {
+    tipoQuery.eq('date_filters', JSON.stringify(dateFilter));
+  }
+  const { data: tipoData, error: tipoError } = await tipoQuery;
   
   if (tipoError) return { data: null, error: tipoError };
 
   // Get recycling by class
-  const { data: turmaData, error: turmaError } = await supabase
-    .rpc('get_reciclagem_por_turma');
+  const turmaQuery = supabase.rpc('get_reciclagem_por_turma');
+  if (filters?.curso || filters?.semestre) {
+    turmaQuery.eq('filters', JSON.stringify(queryFilters));
+  }
+  if (filters?.dataInicio || filters?.dataFim) {
+    turmaQuery.eq('date_filters', JSON.stringify(dateFilter));
+  }
+  const { data: turmaData, error: turmaError } = await turmaQuery;
   
   if (turmaError) return { data: null, error: turmaError };
 
   // Get weekly history (last 8 weeks)
-  const { data: historicoData, error: historicoError } = await supabase
-    .rpc('get_historico_semanal');
+  const historicoQuery = supabase.rpc('get_historico_semanal');
+  if (filters?.curso || filters?.semestre) {
+    historicoQuery.eq('filters', JSON.stringify(queryFilters));
+  }
+  if (filters?.dataInicio || filters?.dataFim) {
+    historicoQuery.eq('date_filters', JSON.stringify(dateFilter));
+  }
+  const { data: historicoData, error: historicoError } = await historicoQuery;
   
   if (historicoError) return { data: null, error: historicoError };
 
   // Get ranking data for classes and students
-  const { data: rankingTurmas, error: rankingTurmasError } = await supabase
-    .rpc('get_ranking_turmas');
+  const rankingTurmasQuery = supabase.rpc('get_ranking_turmas');
+  if (filters?.curso || filters?.semestre) {
+    rankingTurmasQuery.eq('filters', JSON.stringify(queryFilters));
+  }
+  if (filters?.dataInicio || filters?.dataFim) {
+    rankingTurmasQuery.eq('date_filters', JSON.stringify(dateFilter));
+  }
+  const { data: rankingTurmas, error: rankingTurmasError } = await rankingTurmasQuery;
   
   if (rankingTurmasError) return { data: null, error: rankingTurmasError };
 
-  const { data: rankingAlunos, error: rankingAlunosError } = await supabase
-    .rpc('get_ranking_alunos');
+  const rankingAlunosQuery = supabase.rpc('get_ranking_alunos');
+  if (filters?.curso || filters?.semestre) {
+    rankingAlunosQuery.eq('filters', JSON.stringify(queryFilters));
+  }
+  if (filters?.dataInicio || filters?.dataFim) {
+    rankingAlunosQuery.eq('date_filters', JSON.stringify(dateFilter));
+  }
+  const { data: rankingAlunos, error: rankingAlunosError } = await rankingAlunosQuery;
   
   if (rankingAlunosError) return { data: null, error: rankingAlunosError };
 
