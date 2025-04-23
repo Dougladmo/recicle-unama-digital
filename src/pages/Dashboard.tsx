@@ -1,10 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from "@/components/ui/tabs";
 import { getDashboardData } from "@/lib/supabase";
-import { DashboardData, DashboardFilters } from "@/types";
-
+import type {
+  DashboardData,
+  DashboardFilters as DashboardFiltersType,
+} from "@/types";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { RecyclingChart } from "@/components/dashboard/RecyclingChart";
 import { PieChartTurmas } from "@/components/dashboard/PieChartTurmas";
@@ -13,9 +20,7 @@ import {
   RankingTurmasTable,
   RankingAlunosTable,
 } from "@/components/dashboard/RankingTable";
-import {
-  DashboardFilters as DashboardFiltersComponent,
-} from "@/components/dashboard/DashboardFilters";
+import DashboardFiltersComponent from "@/components/dashboard/DashboardFilters";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -23,28 +28,22 @@ export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState<DashboardFilters>({
+
+  const [filters, setFilters] = useState<DashboardFiltersType>({
     curso: null,
     semestre: null,
     dataInicio: null,
     dataFim: null,
   });
 
-  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { toast } = useToast();
 
   const fetchDashboardData = useCallback(
-    async (currentFilters: DashboardFilters) => {
+    async (current: DashboardFiltersType) => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const { data, error } = await getDashboardData({
-          curso: currentFilters.curso,
-          semestre: currentFilters.semestre,
-          dataInicio: currentFilters.dataInicio,
-          dataFim: currentFilters.dataFim,
-        });
-
+        const { data, error } = await getDashboardData(current);
         if (error) {
           setError(error.message);
           toast({
@@ -52,9 +51,10 @@ export default function Dashboard() {
             title: "Erro ao carregar dados",
             description: error.message,
           });
-        } else if (data) {
+        } else {
           setDashboardData(data);
         }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.message);
         toast({
@@ -73,15 +73,15 @@ export default function Dashboard() {
     fetchDashboardData(filters);
   }, [fetchDashboardData, filters]);
 
-  const handleFilterChange = useCallback((newFilters: DashboardFilters) => {
+  const handleFilterChange = (newFilters: DashboardFiltersType) => {
     setFilters(newFilters);
-  }, []);
+  };
 
   if (loading) {
     return (
       <div className="container mx-auto py-6 px-4 flex flex-col items-center justify-center h-64">
-        <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-4 text-lg text-gray-600">Carregando dados...</p>
+        <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+        <p className="mt-4 text-lg text-gray-600">Carregando dados…</p>
       </div>
     );
   }
@@ -96,7 +96,7 @@ export default function Dashboard() {
             </h2>
             <p className="text-gray-600">{error}</p>
             <p className="mt-4">
-              Verifique sua conexão com a internet e tente novamente mais tarde.
+              Verifique sua conexão e tente novamente mais tarde.
             </p>
           </CardContent>
         </Card>
@@ -106,19 +106,13 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto py-6 px-4">
-      <div className="mb-6">
+      <header className="mb-6">
         <h1 className="text-3xl font-bold">Dashboard de Reciclagem</h1>
-        <p className="text-gray-500">
-          Acompanhe o impacto da reciclagem na UNAMA
-        </p>
-      </div>
-
-      {/* Filtros */}
-      <DashboardFiltersComponent onFilterChange={handleFilterChange} />
+        <p className="text-gray-500">Acompanhe o impacto da reciclagem na UNAMA</p>
+      </header>
 
       {dashboardData && (
         <>
-          {/* Cards de estatísticas */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             <StatCard
               title="Total Reciclado"
@@ -137,7 +131,6 @@ export default function Dashboard() {
             />
           </div>
 
-          {/* Tabs de gráficos e ranking */}
           <Tabs defaultValue="graficos" className="mb-8">
             <TabsList className="mb-4 w-full justify-start overflow-x-auto">
               <TabsTrigger value="graficos">Gráficos</TabsTrigger>
@@ -147,10 +140,7 @@ export default function Dashboard() {
             <TabsContent value="graficos">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className={isMobile ? "col-span-1" : "col-span-2"}>
-                  <RecyclingChart
-                    data={dashboardData.por_tipo}
-                    title="Reciclagem por Tipo de Material"
-                  />
+                  <RecyclingChart data={dashboardData.por_tipo} title="Reciclagem por Tipo de Material" />
                 </div>
                 <div className="col-span-1">
                   <PieChartTurmas data={dashboardData.por_turma} />

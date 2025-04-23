@@ -68,7 +68,7 @@ export type DashboardData = {
 };
 
 export type DashboardFilters = {
-  curso: string | null; // 'ADS' | 'BCC' | null
+  curso: string | null;
   semestre: number | null;
   dataInicio: Date | null;
   dataFim: Date | null;
