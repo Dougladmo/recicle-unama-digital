@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js';
 import type { Aluno, Entrega, Turma, Unidade, EntregaFormData, DashboardData } from '@/types';
 
@@ -128,9 +127,8 @@ export async function getDashboardData(): Promise<{ data: DashboardData | null, 
   if (totalError) return { data: null, error: totalError };
 
   // Get delivery count
-  const { count: totalEntregas, error: countError } = await supabase
-    .from('entregas')
-    .select('*', { count: 'exact', head: true });
+  const { data: countData, error: countError } = await supabase
+    .rpc('get_count_entregas');
   
   if (countError) return { data: null, error: countError };
 
@@ -152,13 +150,12 @@ export async function getDashboardData(): Promise<{ data: DashboardData | null, 
   
   if (historicoError) return { data: null, error: historicoError };
 
-  // Get top classes ranking
+  // Get ranking data for classes and students
   const { data: rankingTurmas, error: rankingTurmasError } = await supabase
     .rpc('get_ranking_turmas');
   
   if (rankingTurmasError) return { data: null, error: rankingTurmasError };
 
-  // Get top students ranking
   const { data: rankingAlunos, error: rankingAlunosError } = await supabase
     .rpc('get_ranking_alunos');
   
@@ -166,12 +163,12 @@ export async function getDashboardData(): Promise<{ data: DashboardData | null, 
 
   // Calculate percentage of target met (assuming 100kg is the target)
   const target = 100; // This should be configurable
-  const percentualMeta = totalData ? (totalData.total_kg / target) * 100 : 0;
+  const percentualMeta = totalData ? (totalData[0].total_kg / target) * 100 : 0;
 
   return {
     data: {
-      total_kg: totalData?.total_kg || 0,
-      total_entregas: totalEntregas || 0,
+      total_kg: totalData ? totalData[0].total_kg : 0,
+      total_entregas: countData ? countData[0].count : 0,
       percentual_meta: percentualMeta,
       por_tipo: tipoData || [],
       por_turma: turmaData || [],

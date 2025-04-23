@@ -137,6 +137,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_count_entregas: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          count: number
+        }[]
+      }
       get_dashboard_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -147,6 +153,50 @@ export type Database = {
           entregas_por_turma: Json
           ranking_turmas: Json
           ranking_alunos: Json
+        }[]
+      }
+      get_historico_semanal: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          semana: string
+          quantidade: number
+        }[]
+      }
+      get_ranking_alunos: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          nome: string
+          turma: string
+          quantidade: number
+        }[]
+      }
+      get_ranking_turmas: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          turma: string
+          curso: string
+          semestre: number
+          quantidade: number
+        }[]
+      }
+      get_reciclagem_por_tipo: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          tipo: string
+          quantidade: number
+        }[]
+      }
+      get_reciclagem_por_turma: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          turma: string
+          quantidade: number
+        }[]
+      }
+      get_total_reciclado: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          total_kg: number
         }[]
       }
     }
