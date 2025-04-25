@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -95,76 +94,80 @@ export const Header = () => {
             {mobileOpen ? <X className="h-6 w-6 text-green-600" /> : <Menu className="h-6 w-6 text-green-600" />}
           </button>
         </div>
+      </div>
 
-        {/* mobile nav drawer */}
-        {mobileOpen && (
-          <div className="md:hidden fixed inset-0 top-[73px] bg-white z-50">
-            <nav className="container mx-auto px-4 py-6 flex flex-col space-y-4">
-              <Link 
-                to="/" 
+      {/* mobile nav drawer corrigido */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-[100] bg-white md:hidden">
+          <nav
+            className="flex flex-col gap-6 px-6 py-8 pt-[73px] h-full overflow-y-auto"
+            onClick={e => e.stopPropagation()}
+          >
+            <Link
+              to="/"
+              onClick={() => setMobileOpen(false)}
+              className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
+            >
+              Home
+            </Link>
+            <Link
+              to="/sobre"
+              onClick={() => setMobileOpen(false)}
+              className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
+            >
+              Sobre
+            </Link>
+            {user && (
+              <Link
+                to="/dashboard"
                 onClick={() => setMobileOpen(false)}
                 className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
               >
-                Home
+                Dashboard
               </Link>
-              <Link 
-                to="/sobre" 
-                onClick={() => setMobileOpen(false)}
-                className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
-              >
-                Sobre
-              </Link>
-              {user && (
-                <Link 
-                  to="/dashboard" 
+            )}
+            {!user && (
+              <>
+                <Link
+                  to="/login"
                   onClick={() => setMobileOpen(false)}
                   className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
                 >
-                  Dashboard
+                  Login
                 </Link>
-              )}
-              {!user && (
-                <>
-                  <Link 
-                    to="/login" 
-                    onClick={() => setMobileOpen(false)}
-                    className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
-                  >
-                    Login
-                  </Link>
-                  <Link 
-                    to="/cadastro" 
-                    onClick={() => setMobileOpen(false)}
-                    className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
-                  >
-                    Cadastro
-                  </Link>
-                </>
-              )}
-              {user && (
-                <>
-                  <div className="pt-4 border-t border-gray-100">
-                    <p className="text-sm font-medium text-gray-500">Minha Conta</p>
-                  </div>
-                  <Link 
-                    to="/perfil" 
-                    onClick={() => setMobileOpen(false)}
-                    className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
-                  >
-                    Perfil
-                  </Link>
-                  <button
-                    onClick={handleSignOut}
-                    className="text-lg font-medium text-red-500 hover:text-red-600 transition-colors text-left"
-                  >
-                    Sair
-                  </button>
-                </>
-              )}
-            </nav>
-          </div>
-        )}
-      </div>
+                <Link
+                  to="/cadastro"
+                  onClick={() => setMobileOpen(false)}
+                  className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
+                >
+                  Cadastro
+                </Link>
+              </>
+            )}
+            {user && (
+              <>
+                <div className="pt-4 border-t border-gray-100">
+                  <p className="text-sm font-medium text-gray-500">Minha Conta</p>
+                </div>
+                <Link
+                  to="/perfil"
+                  onClick={() => setMobileOpen(false)}
+                  className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
+                >
+                  Perfil
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="text-lg font-medium text-red-500 hover:text-red-600 transition-colors text-left"
+                >
+                  Sair
+                </button>
+              </>
+            )}
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
+
