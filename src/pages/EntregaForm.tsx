@@ -16,7 +16,7 @@ const formSchema = z.object({
   quantidade_kg: z.number().positive("A quantidade precisa ser maior que zero").refine(val => !isNaN(val), {
     message: "A quantidade precisa ser um número"
   }),
-  tipo_residuo: z.enum(["alumínio", "vidro", "pano", "PET"], {
+  tipo_residuo: z.enum(["aluminio", "vidro", "pano", "PET"], {
     required_error: "Selecione um tipo de resíduo"
   }),
   turma_id: z.string().uuid({
@@ -130,6 +130,7 @@ export default function EntregaForm() {
         description: "Sua contribuição foi registrada com sucesso."
       });
       navigate("/minhas-entregas");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Erro ao registrar entrega:", error);
       toast({
