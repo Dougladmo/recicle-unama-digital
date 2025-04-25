@@ -149,7 +149,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Enhanced CTA Section with gradient and pattern */}
       <section className="py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-green-600 via-green-500 to-emerald-400" />
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGZpbGw9IiNmZmZmZmYiIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjEwIi8+PC9nPjwvc3ZnPg==')] opacity-10" />
