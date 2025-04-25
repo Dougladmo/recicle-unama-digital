@@ -50,13 +50,13 @@ export function DashboardFiltersComponent({ onFilterChange }: DashboardFiltersCo
             <Label htmlFor="curso">Curso</Label>
             <Select
               value={curso || ""}
-              onValueChange={(value) => setCurso(value !== "" ? value : null)}
+              onValueChange={(value) => setCurso(value !== "todos" ? value : null)}
             >
               <SelectTrigger id="curso">
                 <SelectValue placeholder="Selecione o curso" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="todos">Todos</SelectItem>
                 <SelectItem value="ADS">ADS</SelectItem>
                 <SelectItem value="BCC">BCC</SelectItem>
               </SelectContent>
@@ -66,14 +66,14 @@ export function DashboardFiltersComponent({ onFilterChange }: DashboardFiltersCo
           <div>
             <Label htmlFor="semestre">Semestre</Label>
             <Select
-              value={semestre ? String(semestre) : ""}
-              onValueChange={(value) => setSemestre(value !== "" ? Number(value) : null)}
+              value={semestre ? String(semestre) : "todos"}
+              onValueChange={(value) => setSemestre(value !== "todos" ? Number(value) : null)}
             >
               <SelectTrigger id="semestre">
                 <SelectValue placeholder="Selecione o semestre" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="todos">Todos</SelectItem>
                 <SelectItem value="1">1º</SelectItem>
                 <SelectItem value="2">2º</SelectItem>
                 <SelectItem value="3">3º</SelectItem>

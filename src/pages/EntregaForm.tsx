@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { getTurmas, getUnidades, registerEntrega } from "@/lib/supabase";
 import type { Turma, Unidade, EntregaFormData } from "@/types";
+
 const formSchema = z.object({
   quantidade_kg: z.number().positive("A quantidade precisa ser maior que zero").refine(val => !isNaN(val), {
     message: "A quantidade precisa ser um número"
@@ -32,6 +33,7 @@ const formSchema = z.object({
     message: "Selecione uma unidade válida"
   })
 });
+
 export default function EntregaForm() {
   const {
     user
@@ -43,6 +45,7 @@ export default function EntregaForm() {
   const [turmas, setTurmas] = useState<Turma[]>([]);
   const [unidades, setUnidades] = useState<Unidade[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,8 +58,8 @@ export default function EntregaForm() {
       unidade_id: ""
     }
   });
+
   useEffect(() => {
-    // Redirect if not logged in
     if (!user) {
       navigate("/login", {
         state: {
@@ -67,7 +70,6 @@ export default function EntregaForm() {
     }
     async function loadOptions() {
       try {
-        // Load turmas
         const {
           data: turmasData
         } = await getTurmas();
@@ -75,7 +77,6 @@ export default function EntregaForm() {
           setTurmas(turmasData);
         }
 
-        // Load unidades
         const {
           data: unidadesData
         } = await getUnidades();
@@ -83,7 +84,6 @@ export default function EntregaForm() {
           setUnidades(unidadesData);
         }
 
-        // Pre-fill form with user's class if available
         if (user.turma_id) {
           const turma = turmasData?.find(t => t.id === user.turma_id);
           if (turma) {
@@ -105,6 +105,7 @@ export default function EntregaForm() {
     }
     loadOptions();
   }, [user, navigate, form, toast]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
@@ -141,7 +142,6 @@ export default function EntregaForm() {
     }
   }
 
-  // Handle turma selection to auto-fill related fields
   const handleTurmaChange = (turmaId: string) => {
     const selectedTurma = turmas.find(t => t.id === turmaId);
     if (selectedTurma) {
@@ -151,6 +151,7 @@ export default function EntregaForm() {
       form.setValue("unidade_id", selectedTurma.unidade_id);
     }
   };
+
   return <div className="container mx-auto py-10 px-4">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">Registrar Entrega de Resíduos</h1>
