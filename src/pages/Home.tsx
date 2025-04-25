@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Globe, Leaf, Recycle, TreeDeciduous } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+
 export default function Home() {
   return <div className="flex flex-col">
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
@@ -150,21 +151,24 @@ export default function Home() {
       </section>
 
       {/* Enhanced CTA Section with gradient and pattern */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-600 via-green-500 to-emerald-400" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGZpbGw9IiNmZmZmZmYiIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjEwIi8+PC9nPjwvc3ZnPg==')] opacity-10" />
-        <div className="container mx-auto px-4 text-center relative">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white drop-shadow-lg">
-            Pronto para fazer a diferença?
-          </h2>
-          <p className="text-xl text-white/90 mb-12 max-w-3xl mx-auto font-light">
-            Comece agora a registrar suas entregas e acompanhar seu impacto positivo no meio ambiente.
-          </p>
-          <Link to="/cadastro">
-            <Button size="lg" className="bg-white text-green-600 hover:bg-green-50 text-lg px-10 py-6 h-auto shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              Cadastre-se Agora
-            </Button>
-          </Link>
+      <section className="py-24 relative overflow-hidden bg-white">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGZpbGw9IiMwMGEwNTAiIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjEwIi8+PC9nPjwvc3ZnPg==')] opacity-5" />
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-4xl mx-auto bg-gradient-to-br from-green-500/10 via-green-400/10 to-emerald-300/10 rounded-3xl p-12 backdrop-blur-sm border border-green-200/20 shadow-xl">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-green-800 text-center">
+              Pronto para fazer a diferença?
+            </h2>
+            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto text-center">
+              Comece agora a registrar suas entregas e acompanhar seu impacto positivo no meio ambiente.
+            </p>
+            <div className="flex justify-center">
+              <Link to="/cadastro">
+                <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white text-lg px-10 py-6 h-auto shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 rounded-full">
+                  Cadastre-se Agora
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>;
