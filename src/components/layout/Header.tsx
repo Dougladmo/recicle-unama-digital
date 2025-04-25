@@ -26,7 +26,8 @@ export const Header = () => {
     <header className="bg-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link to="/" className="text-2xl font-bold text-green-500">
-          ReciclaUnama
+          RecicleAqui
+          <span className="text-[#032902] p-2 rounded-xl bg-black/15 ml-2">Unama</span>
         </Link>
 
         {/* desktop nav */}

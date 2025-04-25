@@ -4,7 +4,6 @@ import { Globe, Leaf, Recycle, TreeDeciduous } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 export default function Home() {
   return <div className="flex flex-col">
-      {/* Hero Section with forest background and enhanced overlay */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0" style={{
         backgroundImage: "url('https://images.unsplash.com/photo-1523712999610-f77fbcfc3843')",
@@ -17,7 +16,7 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center relative z-30">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 animate-fade-in drop-shadow-lg">
             RecicleAqui 
-            <span className="text-green-900">Unama</span>
+            <span className="text-[#032902]"> Unama</span>
           </h1>
           <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
             Contribua para um futuro sustentável registrando suas entregas de materiais recicláveis
