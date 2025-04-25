@@ -16,14 +16,14 @@ const formSchema = z.object({
   quantidade_kg: z.number().positive("A quantidade precisa ser maior que zero").refine(val => !isNaN(val), {
     message: "A quantidade precisa ser um número"
   }),
-  tipo_residuo: z.enum(["aluminio", "vidro", "pano", "PET"], {
-    required_error: "Selecione um tipo de resíduo"
+  tipo_residuo: z.string().min(1, {
+    message: "Informe o tipo de resíduo"
   }),
   turma_id: z.string().uuid({
     message: "Selecione uma turma válida"
   }),
-  curso: z.enum(["ADS", "BCC"], {
-    required_error: "Selecione um curso"
+  curso: z.string().min(1, {
+    message: "Informe o curso"
   }),
   semestre: z.number().min(1).max(10),
   turno: z.string().min(1, {

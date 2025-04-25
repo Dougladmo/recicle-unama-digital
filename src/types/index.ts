@@ -30,9 +30,9 @@ export type Entrega = {
 
 export type EntregaFormData = {
   quantidade_kg: number;
-  tipo_residuo: 'aluminio' | 'vidro' | 'pano' | 'PET';
+  tipo_residuo: string;     
   turma_id: string;
-  curso: 'ADS' | 'BCC';
+  curso: string;            
   semestre: number;
   turno: string;
   unidade_id: string;
