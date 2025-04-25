@@ -17,7 +17,7 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center relative z-30">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 animate-fade-in drop-shadow-lg">
             RecicleAqui 
-            <span className="text-">Unama</span>
+            <span className="text-green-900">Unama</span>
           </h1>
           <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
             Contribua para um futuro sustentável registrando suas entregas de materiais recicláveis
