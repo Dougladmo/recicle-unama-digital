@@ -167,5 +167,9 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      <section className="flex items-center py-20 justify-center">
+          <img src="/logo.png" alt="logo do site" className="w-56" />
+      </section>
     </div>;
 }
