@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -43,16 +42,16 @@ export function DashboardFiltersComponent({ onFilterChange }: DashboardFiltersCo
   };
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-8 glassmorphism hover:shadow-lg transition-all duration-300">
       <CardContent className="pt-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <Label htmlFor="curso">Curso</Label>
+            <Label htmlFor="curso" className="text-gray-700">Curso</Label>
             <Select
               value={curso || ""}
               onValueChange={(value) => setCurso(value !== "todos" ? value : null)}
             >
-              <SelectTrigger id="curso">
+              <SelectTrigger id="curso" className="bg-white/70 backdrop-blur-sm border-white/30">
                 <SelectValue placeholder="Selecione o curso" />
               </SelectTrigger>
               <SelectContent>
@@ -64,12 +63,12 @@ export function DashboardFiltersComponent({ onFilterChange }: DashboardFiltersCo
           </div>
           
           <div>
-            <Label htmlFor="semestre">Semestre</Label>
+            <Label htmlFor="semestre" className="text-gray-700">Semestre</Label>
             <Select
               value={semestre ? String(semestre) : "todos"}
               onValueChange={(value) => setSemestre(value !== "todos" ? Number(value) : null)}
             >
-              <SelectTrigger id="semestre">
+              <SelectTrigger id="semestre" className="bg-white/70 backdrop-blur-sm border-white/30">
                 <SelectValue placeholder="Selecione o semestre" />
               </SelectTrigger>
               <SelectContent>
@@ -87,12 +86,12 @@ export function DashboardFiltersComponent({ onFilterChange }: DashboardFiltersCo
           </div>
           
           <div>
-            <Label htmlFor="dataInicio">Data Início</Label>
+            <Label htmlFor="dataInicio" className="text-gray-700">Data Início</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full justify-start text-left font-normal"
+                  className="w-full justify-start text-left font-normal bg-white/70 backdrop-blur-sm border-white/30"
                   id="dataInicio"
                 >
                   {dataInicio ? format(dataInicio, 'dd/MM/yyyy') : (
@@ -113,12 +112,12 @@ export function DashboardFiltersComponent({ onFilterChange }: DashboardFiltersCo
           </div>
           
           <div>
-            <Label htmlFor="dataFim">Data Fim</Label>
+            <Label htmlFor="dataFim" className="text-gray-700">Data Fim</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full justify-start text-left font-normal"
+                  className="w-full justify-start text-left font-normal bg-white/70 backdrop-blur-sm border-white/30"
                   id="dataFim"
                 >
                   {dataFim ? format(dataFim, 'dd/MM/yyyy') : (
@@ -139,9 +138,20 @@ export function DashboardFiltersComponent({ onFilterChange }: DashboardFiltersCo
           </div>
         </div>
         
-        <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" onClick={handleReset}>Limpar</Button>
-          <Button onClick={handleFilterChange}>Filtrar</Button>
+        <div className="flex justify-end gap-2 mt-6">
+          <Button 
+            variant="outline" 
+            onClick={handleReset}
+            className="bg-white/70 backdrop-blur-sm border-white/30 hover:bg-white/80"
+          >
+            Limpar
+          </Button>
+          <Button 
+            onClick={handleFilterChange}
+            className="bg-green-500 hover:bg-green-600 text-white"
+          >
+            Filtrar
+          </Button>
         </div>
       </CardContent>
     </Card>
