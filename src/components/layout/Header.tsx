@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Leaf } from "lucide-react";
 
 export const Header = () => {
   const { user, signOut } = useAuth();
@@ -23,126 +24,147 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-md">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-green-500">
-          RecicleAqui
-          <span className="text-[#032902] p-2 rounded-xl bg-black/15 ml-2">Unama</span>
-        </Link>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-green-100">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center space-x-2">
+            <Leaf className="h-6 w-6 text-green-500" />
+            <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
+              RecicleAqui
+            </span>
+            <span className="hidden sm:inline-block text-[#032902] px-3 py-1 rounded-xl bg-black/5 text-sm font-medium">
+              Unama
+            </span>
+          </Link>
 
-        {/* desktop nav */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="hover:text-gray-500">
-            Home
-          </Link>
-          <Link to="/sobre" className="hover:text-gray-500">
-            Sobre
-          </Link>
-          {user && (
-            <Link to="/dashboard" className="hover:text-gray-500">
-              Dashboard
+          {/* desktop nav */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link to="/" className="text-gray-600 hover:text-green-600 transition-colors">
+              Home
             </Link>
-          )}
-          {!user && (
-            <>
-              <Link to="/login" className="hover:text-gray-500">
-                Login
-              </Link>
-              <Link to="/cadastro" className="hover:text-gray-500">
-                Cadastro
-              </Link>
-            </>
-          )}
-          {user && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Avatar className="cursor-pointer">
-                  <AvatarImage src={user.foto_url || undefined} alt="Foto de perfil" />
-                  <AvatarFallback>{user.nome?.[0]}</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/perfil">Perfil</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={handleSignOut}>
-                  Sair
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </nav>
-
-        {/* mobile menu button */}
-        <button
-          className="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* mobile nav drawer */}
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200">
-          <ul className="flex flex-col space-y-2 px-4 py-4">
-            <li>
-              <Link to="/" onClick={() => setMobileOpen(false)} className="block hover:text-gray-500">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/sobre" onClick={() => setMobileOpen(false)} className="block hover:text-gray-500">
-                Sobre
-              </Link>
-            </li>
+            <Link to="/sobre" className="text-gray-600 hover:text-green-600 transition-colors">
+              Sobre
+            </Link>
             {user && (
-              <li>
-                <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="block hover:text-gray-500">
-                  Dashboard
-                </Link>
-              </li>
+              <Link to="/dashboard" className="text-gray-600 hover:text-green-600 transition-colors">
+                Dashboard
+              </Link>
             )}
             {!user && (
               <>
-                <li>
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="block hover:text-gray-500">
+                <Link to="/login">
+                  <Button variant="ghost" className="text-gray-600 hover:text-green-600 hover:bg-green-50">
                     Login
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/cadastro" onClick={() => setMobileOpen(false)} className="block hover:text-gray-500">
+                  </Button>
+                </Link>
+                <Link to="/cadastro">
+                  <Button className="bg-green-500 hover:bg-green-600 text-white">
                     Cadastro
-                  </Link>
-                </li>
+                  </Button>
+                </Link>
               </>
             )}
             {user && (
-              <>
-                <li className="pt-2 border-t border-gray-100">
-                  <span className="block font-medium">Minha Conta</span>
-                </li>
-                <li>
-                  <Link to="/perfil" onClick={() => setMobileOpen(false)} className="block hover:text-gray-500">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className="cursor-pointer ring-2 ring-green-100 hover:ring-green-200 transition-all">
+                    <AvatarImage src={user.foto_url || undefined} alt="Foto de perfil" />
+                    <AvatarFallback className="bg-green-100 text-green-600">{user.nome?.[0]}</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/perfil" className="w-full cursor-pointer">Perfil</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={handleSignOut} className="text-red-500 cursor-pointer">
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </nav>
+
+          {/* mobile menu button */}
+          <button
+            className="md:hidden p-2 rounded-md hover:bg-green-50 transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="h-6 w-6 text-green-600" /> : <Menu className="h-6 w-6 text-green-600" />}
+          </button>
+        </div>
+
+        {/* mobile nav drawer */}
+        {mobileOpen && (
+          <div className="md:hidden fixed inset-0 top-[73px] bg-white/95 backdrop-blur-xl z-50">
+            <nav className="container mx-auto px-4 py-6 flex flex-col space-y-4">
+              <Link 
+                to="/" 
+                onClick={() => setMobileOpen(false)}
+                className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
+              >
+                Home
+              </Link>
+              <Link 
+                to="/sobre" 
+                onClick={() => setMobileOpen(false)}
+                className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
+              >
+                Sobre
+              </Link>
+              {user && (
+                <Link 
+                  to="/dashboard" 
+                  onClick={() => setMobileOpen(false)}
+                  className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
+                >
+                  Dashboard
+                </Link>
+              )}
+              {!user && (
+                <>
+                  <Link 
+                    to="/login" 
+                    onClick={() => setMobileOpen(false)}
+                    className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link 
+                    to="/cadastro" 
+                    onClick={() => setMobileOpen(false)}
+                    className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
+                  >
+                    Cadastro
+                  </Link>
+                </>
+              )}
+              {user && (
+                <>
+                  <div className="pt-4 border-t border-gray-100">
+                    <p className="text-sm font-medium text-gray-500">Minha Conta</p>
+                  </div>
+                  <Link 
+                    to="/perfil" 
+                    onClick={() => setMobileOpen(false)}
+                    className="text-lg font-medium text-gray-600 hover:text-green-600 transition-colors"
+                  >
                     Perfil
                   </Link>
-                </li>
-                <li>
                   <button
                     onClick={handleSignOut}
-                    className="w-full text-left hover:text-gray-500"
+                    className="text-lg font-medium text-red-500 hover:text-red-600 transition-colors text-left"
                   >
                     Sair
                   </button>
-                </li>
-              </>
-            )}
-          </ul>
-        </div>
-      )}
+                </>
+              )}
+            </nav>
+          </div>
+        )}
+      </div>
     </header>
   );
 };
