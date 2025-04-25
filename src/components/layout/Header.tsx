@@ -98,7 +98,7 @@ export const Header = () => {
 
         {/* mobile nav drawer */}
         {mobileOpen && (
-          <div className="md:hidden fixed inset-0 top-[73px] bg-white/95 backdrop-blur-xl z-50">
+          <div className="md:hidden fixed inset-0 top-[73px] bg-white z-50">
             <nav className="container mx-auto px-4 py-6 flex flex-col space-y-4">
               <Link 
                 to="/" 
