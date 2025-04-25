@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Globe, Leaf, Recycle, TreeDeciduous } from "lucide-react";
@@ -37,14 +36,16 @@ export default function Home() {
               </Button>
             </Link>
             <Link to="/registrar">
-              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6 h-auto backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <Button 
+                size="lg" 
+                className="bg-transparent border-2 border-white/30 text-white backdrop-blur-sm hover:bg-white/10 text-lg px-8 py-6 h-auto shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 glassmorphism"
+              >
                 <Recycle className="mr-2" />
                 Registrar Entrega
               </Button>
             </Link>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-40" />
       </section>
 
       {/* Stats Section with Glassmorphism */}
