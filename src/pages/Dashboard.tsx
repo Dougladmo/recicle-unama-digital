@@ -1,5 +1,5 @@
+
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   Tabs,
@@ -10,7 +10,7 @@ import {
 import { getDashboardData } from "@/lib/supabase";
 import type {
   DashboardData,
-  DashboardFilters as DashboardFiltersType,
+  DashboardFilters,
 } from "@/types";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { RecyclingChart } from "@/components/dashboard/RecyclingChart";
@@ -20,7 +20,7 @@ import {
   RankingTurmasTable,
   RankingAlunosTable,
 } from "@/components/dashboard/RankingTable";
-import DashboardFiltersComponent from "@/components/dashboard/DashboardFilters";
+import { DashboardFiltersComponent } from "@/components/dashboard/DashboardFilters";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -29,7 +29,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [filters, setFilters] = useState<DashboardFiltersType>({
+  const [filters, setFilters] = useState<DashboardFilters>({
     curso: null,
     semestre: null,
     dataInicio: null,
@@ -40,7 +40,7 @@ export default function Dashboard() {
   const { toast } = useToast();
 
   const fetchDashboardData = useCallback(
-    async (current: DashboardFiltersType) => {
+    async (current: DashboardFilters) => {
       setLoading(true);
       try {
         const { data, error } = await getDashboardData(current);
@@ -73,7 +73,7 @@ export default function Dashboard() {
     fetchDashboardData(filters);
   }, [fetchDashboardData, filters]);
 
-  const handleFilterChange = (newFilters: DashboardFiltersType) => {
+  const handleFilterChange = (newFilters: DashboardFilters) => {
     setFilters(newFilters);
   };
 
@@ -110,6 +110,8 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold">Dashboard de Reciclagem</h1>
         <p className="text-gray-500">Acompanhe o impacto da reciclagem na UNAMA</p>
       </header>
+
+      <DashboardFiltersComponent onFilterChange={handleFilterChange} />
 
       {dashboardData && (
         <>

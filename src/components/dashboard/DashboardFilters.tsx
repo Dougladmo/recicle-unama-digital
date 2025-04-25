@@ -1,166 +1,151 @@
-import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from "@/components/ui/tabs";
-import { getDashboardData } from "@/lib/supabase";
-import type {
-  DashboardData,
-  DashboardFilters as DashboardFiltersType,
-} from "@/types";
-import { StatCard } from "@/components/dashboard/StatCard";
-import { RecyclingChart } from "@/components/dashboard/RecyclingChart";
-import { PieChartTurmas } from "@/components/dashboard/PieChartTurmas";
-import { TimeSeriesChart } from "@/components/dashboard/TimeSeriesChart";
-import {
-  RankingTurmasTable,
-  RankingAlunosTable,
-} from "@/components/dashboard/RankingTable";
-import DashboardFiltersComponent from "@/components/dashboard/DashboardFilters";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useToast } from "@/components/ui/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import type { DashboardFilters } from "@/types";
 
-export default function Dashboard() {
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface DashboardFiltersComponentProps {
+  onFilterChange: (filters: DashboardFilters) => void;
+}
 
-  const [filters, setFilters] = useState<DashboardFiltersType>({
-    curso: null,
-    semestre: null,
-    dataInicio: null,
-    dataFim: null,
-  });
+export function DashboardFiltersComponent({ onFilterChange }: DashboardFiltersComponentProps) {
+  const [curso, setCurso] = useState<string | null>(null);
+  const [semestre, setSemestre] = useState<number | null>(null);
+  const [dataInicio, setDataInicio] = useState<Date | null>(null);
+  const [dataFim, setDataFim] = useState<Date | null>(null);
 
-  const isMobile = useIsMobile();
-  const { toast } = useToast();
-
-  const fetchDashboardData = useCallback(
-    async (current: DashboardFiltersType) => {
-      setLoading(true);
-      try {
-        const { data, error } = await getDashboardData(current);
-        if (error) {
-          setError(error.message);
-          toast({
-            variant: "destructive",
-            title: "Erro ao carregar dados",
-            description: error.message,
-          });
-        } else {
-          setDashboardData(data);
-        }
-      } catch (err: any) {
-        setError(err.message);
-        toast({
-          variant: "destructive",
-          title: "Erro ao carregar dados",
-          description: err.message,
-        });
-      } finally {
-        setLoading(false);
-      }
-    },
-    [toast]
-  );
-
-  useEffect(() => {
-    fetchDashboardData(filters);
-  }, [fetchDashboardData, filters]);
-
-  const handleFilterChange = (newFilters: DashboardFiltersType) => {
-    setFilters(newFilters);
+  const handleFilterChange = () => {
+    onFilterChange({
+      curso,
+      semestre,
+      dataInicio,
+      dataFim,
+    });
   };
 
-  if (loading) {
-    return (
-      <div className="container mx-auto py-6 px-4 flex flex-col items-center justify-center h-64">
-        <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
-        <p className="mt-4 text-lg text-gray-600">Carregando dados…</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto py-6 px-4">
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <h2 className="text-2xl font-bold text-red-500 mb-2">
-              Erro ao carregar dados
-            </h2>
-            <p className="text-gray-600">{error}</p>
-            <p className="mt-4">
-              Verifique sua conexão e tente novamente mais tarde.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const handleReset = () => {
+    setCurso(null);
+    setSemestre(null);
+    setDataInicio(null);
+    setDataFim(null);
+    onFilterChange({
+      curso: null,
+      semestre: null,
+      dataInicio: null,
+      dataFim: null,
+    });
+  };
 
   return (
-    <div className="container mx-auto py-6 px-4">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold">Dashboard de Reciclagem</h1>
-        <p className="text-gray-500">Acompanhe o impacto da reciclagem na UNAMA</p>
-      </header>
-
-      <DashboardFiltersComponent onFilterChange={handleFilterChange} />
-
-      {dashboardData && (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <StatCard
-              title="Total Reciclado"
-              value={`${dashboardData.total_kg} kg`}
-              description="Total de resíduos reciclados até agora"
-            />
-            <StatCard
-              title="Total de Entregas"
-              value={dashboardData.total_entregas}
-              description="Número de entregas registradas"
-            />
-            <StatCard
-              title="Meta Atingida"
-              value={`${dashboardData.percentual_meta.toFixed(1)}%`}
-              description="Progresso para atingir a meta"
-            />
+    <Card className="mb-6">
+      <CardContent className="pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <Label htmlFor="curso">Curso</Label>
+            <Select
+              value={curso || ""}
+              onValueChange={(value) => setCurso(value !== "" ? value : null)}
+            >
+              <SelectTrigger id="curso">
+                <SelectValue placeholder="Selecione o curso" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="ADS">ADS</SelectItem>
+                <SelectItem value="BCC">BCC</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-
-          <Tabs defaultValue="graficos" className="mb-8">
-            <TabsList className="mb-4 w-full justify-start overflow-x-auto">
-              <TabsTrigger value="graficos">Gráficos</TabsTrigger>
-              <TabsTrigger value="ranking">Ranking</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="graficos">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className={isMobile ? "col-span-1" : "col-span-2"}>
-                  <RecyclingChart data={dashboardData.por_tipo} title="Reciclagem por Tipo de Material" />
-                </div>
-                <div className="col-span-1">
-                  <PieChartTurmas data={dashboardData.por_turma} />
-                </div>
-                <div className="col-span-1 lg:col-span-3">
-                  <TimeSeriesChart data={dashboardData.historico} />
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="ranking">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <RankingTurmasTable data={dashboardData.ranking_turmas} />
-                <RankingAlunosTable data={dashboardData.ranking_alunos} />
-              </div>
-            </TabsContent>
-          </Tabs>
-        </>
-      )}
-    </div>
+          
+          <div>
+            <Label htmlFor="semestre">Semestre</Label>
+            <Select
+              value={semestre ? String(semestre) : ""}
+              onValueChange={(value) => setSemestre(value !== "" ? Number(value) : null)}
+            >
+              <SelectTrigger id="semestre">
+                <SelectValue placeholder="Selecione o semestre" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="1">1º</SelectItem>
+                <SelectItem value="2">2º</SelectItem>
+                <SelectItem value="3">3º</SelectItem>
+                <SelectItem value="4">4º</SelectItem>
+                <SelectItem value="5">5º</SelectItem>
+                <SelectItem value="6">6º</SelectItem>
+                <SelectItem value="7">7º</SelectItem>
+                <SelectItem value="8">8º</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <Label htmlFor="dataInicio">Data Início</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left font-normal"
+                  id="dataInicio"
+                >
+                  {dataInicio ? format(dataInicio, 'dd/MM/yyyy') : (
+                    <span className="text-muted-foreground">Selecione a data</span>
+                  )}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dataInicio}
+                  onSelect={setDataInicio}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+          
+          <div>
+            <Label htmlFor="dataFim">Data Fim</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left font-normal"
+                  id="dataFim"
+                >
+                  {dataFim ? format(dataFim, 'dd/MM/yyyy') : (
+                    <span className="text-muted-foreground">Selecione a data</span>
+                  )}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dataFim}
+                  onSelect={setDataFim}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+        
+        <div className="flex justify-end gap-2 mt-4">
+          <Button variant="outline" onClick={handleReset}>Limpar</Button>
+          <Button onClick={handleFilterChange}>Filtrar</Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
+
+export default DashboardFiltersComponent;
